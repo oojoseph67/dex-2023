@@ -10,13 +10,15 @@ app.use(express.json());
 
 app.get("/swapTokenPrice", async (req, res) => {
 
-  const {query} = req;
+  const {query} = req
   const responseOne = await Moralis.EvmApi.token.getTokenPrice({
-    address: query.addressOne
+    address: query.addressOne,
+    chain: query.chain
   })
 
   const responseTwo = await Moralis.EvmApi.token.getTokenPrice({
-    address: query.addressTwo
+    address: query.addressTwo,
+    chain: query.chain
   })
 
   console.log(responseOne.raw)
@@ -25,11 +27,25 @@ app.get("/swapTokenPrice", async (req, res) => {
   const usdPrices = {
     tokenOne: responseOne.raw.usdPrice,
     tokenTwo: responseTwo.raw.usdPrice,
-    ratio: responseOne.raw.usdPrice/responseTwo.raw.usdPrice
+    ratio: responseOne.raw.usdPrice/responseTwo.raw.usdPrice,
+    chain: query.chain
   }
 
   return res.status(200).json(usdPrices);
 });
+
+app.get("/requestTokenBalance", async (req, res) => {
+  
+  const {query} = req
+  const tokenListResponse = await Moralis.EvmApi.token.getWalletTokenBalances({
+    address: query.address,
+    chain: query.chain,
+    tokenAddresses: [query.tokenAddresses]
+  })
+
+  return res.status(200).json(tokenListResponse)
+
+})
 
 Moralis.start({
   apiKey: process.env.MORALIS_API_KEY,

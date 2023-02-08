@@ -32,6 +32,7 @@ function Swap(props) {
     data: null,
     value: null,
   })
+  const [searchToken, getSearchToken] = useState(null)
 
   const { data, sendTransaction } = useSendTransaction({
     request: {
@@ -93,11 +94,24 @@ function Swap(props) {
     const res = await axios.get(`http://localhost:3001/swapTokenPrice`, {
       params: {
         addressOne: one,
-        addressTwo: two
+        addressTwo: two,
+        chain: "0x1"
       }
     })
     console.log("price data", res.data)
     setPrices(res.data)
+  }
+
+  async function fetchRequestTokenBalance() {
+    console.log("hello world")
+    const res = await axios.get(`https://localhost:3001/requestTokenBalance`, {
+      params: {
+        address: address,
+        chain: "0x1",
+        tokenAddress: "0xcd214be756de93ab6ac9de75c0971c6f0220ee29"
+      }
+    })
+    console.log("request token balance details", res.data)
   }
 
   async function fetchDexSwap() {

@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 
 function Header({ address, isConnected, connect }) {
 
-
   return (
     <header>
       <div className="leftH">
